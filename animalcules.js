@@ -1,8 +1,7 @@
-var c;
+var canvas;
 var ctx;
 var particles = [];
-var width = 0;
-var height = 0;
+
 
 function Particle(_x, _y, _vx, _vy,_color,_num){
     this.x = _x;
@@ -14,17 +13,24 @@ function Particle(_x, _y, _vx, _vy,_color,_num){
 }
 
 function main(){
-    c = document.getElementById("steven");
-    width = document.body.clientWidth;
-    height =document.body.scrollHeight ;
-    c.width = width;
-    c.height= height;
-    ctx = c.getContext("2d");
+    canvas = document.getElementById("canvas");
+    canvas.width = $(window).get(0).innerWidth;
+    canvas.height = $(window).get(0).innerHeight;
+    ctx = canvas.getContext("2d");
     ctx.fillStyle = "white";
-    ctx.fillRect(0,0,width,height);
+    ctx.fillRect(0,0,canvas.width,canvas.height);
     init();
     setInterval(loop,1000/30);
 }
+
+$(window).resize(resizeCanvas);
+function resizeCanvas() {
+    canvas.width = $(window).get(0).innerWidth;
+    canvas.height = $(window).get(0).innerHeight;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+};
+//resizeCanvas();
 
 function init(){
     var a = Math.random()*3.14/2;
@@ -45,9 +51,9 @@ function init(){
 }
 
 function myClick(){
-    var x = event.clientX - 10;
-    var y = event.clientY + 30;
-    for(var i = 0;i < particles.length; i++){
+    var x = event.clientX;
+    var y = event.clientY;
+    for(var i = 0; i < particles.length; i++){
         var p = particles[i];
         var mx = x - p.x;
         var my = y - p.y;
@@ -68,9 +74,9 @@ function myClick(){
 }
 
 function clean(){
-    ctx = c.getContext("2d");
+    ctx = canvas.getContext("2d");
     ctx.fillStyle = "white";
-    ctx.fillRect(0,0,width,height);
+    ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function render(){
@@ -85,7 +91,6 @@ function render(){
         ctx.fill();
     }
 }
-var ppt = 0;
 
 function update(){
     var i = particles.length;
@@ -97,23 +102,23 @@ function update(){
             p.x = 0;
             p.vx *= -1;
         }
-        if(p.x > width-50){
-            p.x = width-50;
+        if(p.x > canvas.width-50){
+            p.x = canvas.width-50;
             p.vx *= -1;
         }
         if(p.y < 0){
             p.y = 0
             p.vy *= -1;
         }
-        if(p.y > height-50){
-            p.y = height - 50;
+        if(p.y > canvas.height-50){
+            p.y = canvas.height - 50;
             p.vy *= -1;
         }
         p.x += p.vx;
         p.y += p.vy;
-
     }
 }
+
 function loop(){
     update();
     render();
