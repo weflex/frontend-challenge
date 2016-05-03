@@ -1,6 +1,6 @@
-var canvas;
-var ctx;
-var particles = [];
+let canvas;
+let ctx;
+let particles = [];
 
 
 function Particle(_x, _y, _vx, _vy,_color,_num){
@@ -30,38 +30,38 @@ function resizeCanvas() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 };
-//resizeCanvas();
 
 function init(){
-    var a = Math.random()*3.14/2;
-    var r = Math.random()*20;
-    var vx = Math.cos(a)*r / 4;
-    var vy = Math.sin(a)*r / 4;
-    var newColor = 0;
+    const a = Math.random()*3.14/2; //velocity
+    const r = Math.random()*20; // radius
+    const vx = Math.cos(a)*r / 4; //velocity of x
+    const vy = Math.sin(a)*r / 4; //velocity of y
+    let newColor = 0;
+    let myRandom = 0;
     // random a color
     while(newColor < 240){
-        var myRandom = Math.floor(Math.random() * 0xffffff);
-        var red = myRandom >> 16;
-        var green = (myRandom >> 8) & 0xff;
-        var blue = myRandom & 0xff;
+        myRandom = Math.floor(Math.random() * 0xffffff);
+        let red = myRandom >> 16;
+        let green = (myRandom >> 8) & 0xff;
+        let blue = myRandom & 0xff;
         newColor = Math.sqrt(red * red + green * green + blue * blue);
     }
-    var p = new Particle(50,50,vx,vy,"#"+myRandom.toString(16),1);
+    const p = new Particle(50,50,vx,vy,"#"+myRandom.toString(16),1);
     particles.push(p);
 }
 
 function myClick(){
-    var x = event.clientX;
-    var y = event.clientY;
-    for(var i = 0; i < particles.length; i++){
-        var p = particles[i];
-        var mx = x - p.x;
-        var my = y - p.y;
+    const x = event.clientX;
+    const y = event.clientY;
+    for(let i = 0; i < particles.length; i++){
+        let p = particles[i];
+        let mx = x - p.x;
+        let my = y - p.y;
         if(mx >= 0 && mx <= 50 && my >= 0 && my <= 50 ){
-            var tot = p.vx * p.vx + p.vy * p.vy + Math.floor(Math.random() * 4);
-            var nvx = (2 * ((tot | 0)% 2) - 1) * Math.sqrt(Math.floor(Math.random() * tot))
-            var nvy = (2 * (((Math.random() * tot)| 0)% 2) - 1) * Math.sqrt(tot - nvx * nvx);
-            var np = 0;
+            let tot = p.vx * p.vx + p.vy * p.vy + Math.floor(Math.random() * 4);
+            let nvx = (2 * ((tot | 0)% 2) - 1) * Math.sqrt(Math.floor(Math.random() * tot))
+            let nvy = (2 * (((Math.random() * tot)| 0)% 2) - 1) * Math.sqrt(tot - nvx * nvx);
+            let np = 0;
             if(p.num * 2 > 1000){
                 np = new Particle(x,y,nvx,nvy,"green",(p.num/3.1415926|0));
             }else{
@@ -81,8 +81,8 @@ function clean(){
 
 function render(){
     clean();
-    for(var i = 0; i < particles.length ; i++){
-        var p = particles[i];
+    for(let i = 0; i < particles.length ; i++){
+        const p = particles[i];
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x,p.y,50,50);
         ctx.fillStyle = "Black";
@@ -93,11 +93,9 @@ function render(){
 }
 
 function update(){
-    var i = particles.length;
+    let i = particles.length;
     while(i--){
-        var p = particles[i];
-        var min = 1;
-        var vlc = 5;
+        const p = particles[i];
         if(p.x < 0){
             p.x = 0;
             p.vx *= -1;
