@@ -1,7 +1,12 @@
-const $window = $(window)
-let canvas = {};
-let ctx = {};
-let particles = [];
+class TheWorld {
+  constructor(contents = []){
+    this.canvas = {};
+    this.ctx = {};
+    this.particles = [];
+  }
+}
+
+const theWorld = new TheWorld();
 
 function Particle(_x, _y, _vx, _vy,_color,_num) {
   this.x = _x;
@@ -13,21 +18,19 @@ function Particle(_x, _y, _vx, _vy,_color,_num) {
 }
 
 function main() {
-  canvas = document.getElementById('canvas');
-  canvas.width = $(window).get(0).innerWidth;
-  canvas.height = $(window).get(0).innerHeight;
-  ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  theWorld.canvas = document.getElementById('canvas');
+  theWorld.canvas.width = window.innerWidth;
+  theWorld.canvas.height = window.innerHeight;
+  theWorld.ctx = theWorld.canvas.getContext('2d');
+  theWorld.ctx.fillStyle = 'white';
+  theWorld.ctx.fillRect(0,0,theWorld.canvas.width,theWorld.canvas.height);
   init();
   setInterval(loop,1000 / 30);
 }
 
-$window.resize(resizeCanvas);
 function resizeCanvas() {
-  canvas.width = $(window).get(0).innerWidth;
-  canvas.height = $(window).get(0).innerHeight;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  theWorld.canvas.width = window.innerWidth;
+  theWorld.canvas.height = window.innerHeight;
 };
 
 function init() {
@@ -42,7 +45,7 @@ function init() {
   let newColor = 0;
   let myRandom = 0;
   // random a color
-  while(newColor < 240) {
+  while (newColor < 240) {
     myRandom = Math.floor(Math.random() * 0xffffff);
     let red = myRandom >> 16;
     let green = (myRandom >> 8) & 0xff;
@@ -51,27 +54,27 @@ function init() {
   }
   const color = myRandom.toString(16);
   const p = new Particle(50,50,vx,vy,`#${color}`,1);
-  particles.push(p);
+  theWorld.particles.push(p);
 }
 
-function myClick() {
+function onClick() {
   const x = event.clientX;
   const y = event.clientY;
-  particles.every(function(p,index,_ary) {
+  theWorld.particles.every(function(p,index,_ary) {
     let mx = x - p.x;
     let my = y - p.y;
-    if(mx >= 0 && mx <= 50 && my >= 0 && my <= 50 ) {
+    if (mx >= 0 && mx <= 50 && my >= 0 && my <= 50 ) {
       let tot = p.vx * p.vx + p.vy * p.vy + Math.floor(Math.random() * 4);
       let nvx = (2 * ((tot | 0)% 2) - 1) * Math.sqrt(Math.floor(Math.random() * tot))
       let nvy = (2 * (((Math.random() * tot) | 0)% 2) - 1) * Math.sqrt(tot - nvx * nvx);
       let np = 0;
-      if(p.num * 2 > 1000) {
+      if (p.num * 2 > 1000) {
         np = new Particle(x,y,nvx,nvy,'green',(p.num / 3.1415926|0));
       }else {
         np = new Particle(x,y,nvx,nvy,'pink',p.num * 2);
       }
 
-      particles.push(np);
+      theWorld.particles.push(np);
       return false;
     }
 
@@ -80,42 +83,43 @@ function myClick() {
 }
 
 function clean() {
-  ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  resizeCanvas();
+  theWorld.ctx = theWorld.canvas.getContext('2d');
+  theWorld.ctx.fillStyle = 'white';
+  theWorld.ctx.fillRect(0,0,theWorld.canvas.width,theWorld.canvas.height);
 }
 
 function render() {
   clean();
-  particles.forEach(p => {
-    ctx.fillStyle = p.color;
-    ctx.fillRect(p.x,p.y,50,50);
-    ctx.fillStyle = 'Black';
-    ctx.fillText(p.num,p.x + 10,p.y + 32)
-    ctx.font='20px Verdana';
-    ctx.fill();
+  theWorld.particles.forEach(p => {
+    theWorld.ctx.fillStyle = p.color;
+    theWorld.ctx.fillRect(p.x,p.y,50,50);
+    theWorld.ctx.fillStyle = 'Black';
+    theWorld.ctx.font='20px Verdana';
+    theWorld.ctx.fillText(p.num,p.x + 10,p.y + 32)
+    theWorld.ctx.fill();
   })
 }
 
 function update() {
-  particles.map(p => {
-    if(p.x < 0) {
+  theWorld.particles.map(p => {
+    if (p.x < 0) {
       p.x = 0;
       p.vx *= -1;
     }
 
-    if(p.x > canvas.width - 50) {
-      p.x = canvas.width - 50;
+    if (p.x > theWorld.canvas.width - 50) {
+      p.x = theWorld.canvas.width - 50;
       p.vx *= -1;
     }
 
-    if(p.y < 0) {
+    if (p.y < 0) {
       p.y = 0
       p.vy *= -1;
     }
 
-    if(p.y > canvas.height-50) {
-      p.y = canvas.height - 50;
+    if (p.y > theWorld.canvas.height-50) {
+      p.y = theWorld.canvas.height - 50;
       p.vy *= -1;
     }
 
