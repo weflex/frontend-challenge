@@ -8,16 +8,18 @@ class TheWorld {
 
 const theWorld = new TheWorld();
 
-function Particle(_x, _y, _vx, _vy,_color,_num) {
-  this.x = _x;
-  this.y = _y;
-  this.vx = _vx;
-  this.vy = _vy;
-  this.color = _color;
-  this.num = _num;
+class Particle {
+  constructor(_x, _y, _vx, _vy,_color,_num) {
+    this.x = _x;
+    this.y = _y;
+    this.vx = _vx;
+    this.vy = _vy;
+    this.color = _color;
+    this.num = _num;
+  }
 }
 
-function main() {
+  function main() {
   theWorld.canvas = document.getElementById('canvas');
   theWorld.canvas.width = window.innerWidth;
   theWorld.canvas.height = window.innerHeight;
